@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-
+//teste;
 
 struct byte_info
 {
