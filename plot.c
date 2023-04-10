@@ -6,7 +6,7 @@
 
 typedef struct lista
 {
-    int num;
+    void* num;
     struct lista* next;
 } lista;
 
@@ -20,7 +20,7 @@ lista* cria_elo (lista* new, int valor)
 
 typedef struct arvore  
 {
-    int item;
+    void* item;
     struct arvore* esq;
     struct arvore* dir;
 } arvore;
