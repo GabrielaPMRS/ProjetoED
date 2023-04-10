@@ -49,7 +49,7 @@ arvore* insere(arvore* raiz, int item)
         atual=raiz;
         while (atual!= NULL)  
         {
-            printf("No atual:%d No a ser inserido:%d\n",atual->item,item);  
+            //printf("No atual:%d No a ser inserido:%d\n",atual->item,item);  
             if(item<=atual->item)  
             {
                 if (atual->esq==NULL)  
@@ -193,14 +193,22 @@ int busca_lista(lista* inicio, int item)
 int main ()
 {
     int i,n,item, contlist,contarv;
-    arvore* nova=NULL; 
-    lista* new=NULL;
-    printf("Diga quantos elementos serao inseridos\n");
-    scanf("%d",&n);
+    arvore* nova = NULL; 
+    lista* new = NULL;
+    FILE* imput = fopen("data.txt", "r");
+    if(imput == NULL)
+    {
+        printf("A entrada nao existe\n");
+        return 0;
+    }
+    //printf("Diga quantos elementos serao inseridos\n");
+    //scanf("%d",&n);
+    fscanf(imput, "%d", &n); //ler a entrada pelo arquivo
     for (i=0;i<n;i++)
     {
-        printf("Entre com o %d item\n",i+1);
-        scanf("%d",&item);              
+        //printf("Entre com o %d item\n",i+1);
+        //scanf("%d",&item); 
+        fscanf(imput, "%d", &item);             
         nova=insere(nova,item);        
         new=cria_elo(new,item);
     } 
@@ -209,8 +217,10 @@ int main ()
     printf ("\n");  
     printf( "Agora a lista:\n");
     printa_lista(new); 
-    printf("Agora entre com o numero que você quer buscar:\n");
-    scanf("%d",&item);
+    //printf("Agora entre com o numero que voce quer buscar:\n");
+    //scanf("%d",&item);
+    fscanf(imput, "%d", &item);
+    fclose(imput);
     contarv= busca_arv_bin (nova,item);
     contlist=busca_lista(new,item);
     if (contarv==0)
@@ -219,7 +229,7 @@ int main ()
     }
     else
     {
-        printf("encontrado na arvore com %d iterações\n",contarv);
+        printf("encontrado na arvore com %d iteracoes\n",contarv);
 
     }  
     if (contlist==0)
@@ -228,7 +238,7 @@ int main ()
     }
     else
     {
-        printf("encontrado na lista com %d iterações\n",contlist);
+        printf("encontrado na lista com %d iteracoes\n",contlist);
 
     }    
     return 0;
