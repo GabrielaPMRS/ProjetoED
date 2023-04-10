@@ -2,6 +2,7 @@
 #include <string.h>
 
 //teste;
+//testando;
 
 struct byte_info
 {
