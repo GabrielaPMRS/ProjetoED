@@ -7,238 +7,234 @@
 
 typedef struct lista
 {
-    void* num;
-    struct lista* next;
+    void *num;
+    struct lista *next;
 } lista;
 
-lista* cria_elo (lista* new, int valor)
+lista *cria_elo(lista *new, int valor)
 {
-   lista* novo=(lista*)malloc(sizeof(lista));
-    novo->num=valor;
-    novo->next=new;
+    lista *novo = (lista *)malloc(sizeof(lista));
+    novo->num = valor;
+    novo->next = new;
     return novo;
 }
 
-typedef struct arvore  
+typedef struct arvore
 {
-    void* item;
-    struct arvore* esq;
-    struct arvore* dir;
+    void *item;
+    struct arvore *esq;
+    struct arvore *dir;
 } arvore;
 
-arvore* cria_no (arvore* nova, int valor) 
+arvore *cria_no(arvore *nova, int valor)
 {
-    nova=(arvore*)malloc(sizeof(arvore));
-    nova->esq=NULL;
-    nova->dir=NULL;
-    nova->item=valor;
+    nova = (arvore *)malloc(sizeof(arvore));
+    nova->esq = NULL;
+    nova->dir = NULL;
+    nova->item = valor;
     return nova;
-
 }
-arvore* insere(arvore* raiz, int item)  
+arvore *insere(arvore *raiz, int item)
 {
-    arvore* no=NULL;  
-    arvore* atual=NULL;  
+    arvore *no = NULL;
+    arvore *atual = NULL;
     int i;
-    if (raiz==NULL)  
+    if (raiz == NULL)
     {
-        raiz=cria_no(raiz,item);        
+        raiz = cria_no(raiz, item);
         return raiz;
     }
-    else  
+    else
     {
-        atual=raiz;
-        while (atual!= NULL)  
+        atual = raiz;
+        while (atual != NULL)
         {
-            //printf("No atual:%d No a ser inserido:%d\n",atual->item,item);  
-            if(item<=atual->item)  
+            // printf("No atual:%d No a ser inserido:%d\n",atual->item,item);
+            if (item <= atual->item)
             {
-                if (atual->esq==NULL)  
+                if (atual->esq == NULL)
                 {
-                    atual->esq=cria_no(no,item);
+                    atual->esq = cria_no(no, item);
                     return raiz;
-                    
                 }
-                else  
-                {             
-                    atual=atual->esq;       
+                else
+                {
+                    atual = atual->esq;
                 }
             }
-            else  
+            else
             {
-                if(atual->dir==NULL)  
+                if (atual->dir == NULL)
                 {
-                    atual->dir=cria_no(no,item); 
+                    atual->dir = cria_no(no, item);
                     return raiz;
-                    
                 }
-                else  
+                else
                 {
-                    atual=atual->dir;                    
+                    atual = atual->dir;
                 }
             }
         }
-    }        
+    }
 }
 
-void printa_pre (arvore* no)  
+void printa_pre(arvore *no)
 {
-   if( no==NULL)
-   {
-    return;
-   }
-   else
-   {
-    printf("%d ", no->item);
-    printa_pre(no->esq);
-    printa_pre(no->dir);
-   }   
+    if (no == NULL)
+    {
+        return;
+    }
+    else
+    {
+        printf("%d ", no->item);
+        printa_pre(no->esq);
+        printa_pre(no->dir);
+    }
 }
 
-void printa_em (arvore* no)  
+void printa_em(arvore *no)
 {
-   if( no==NULL)
-   {
-    return;
-   }
-   else
-   {
-    printa_em(no->esq);
-    printf("%d ", no->item);
-    printa_em(no->dir);
-   }   
+    if (no == NULL)
+    {
+        return;
+    }
+    else
+    {
+        printa_em(no->esq);
+        printf("%d ", no->item);
+        printa_em(no->dir);
+    }
 }
 
-void printa_pos (arvore* no)  
+void printa_pos(arvore *no)
 {
-   if( no==NULL)
-   {
-    return;
-   }
-   else
-   {
-    printa_pos(no->esq);
-    printa_pos(no->dir);
-    printf("%d ", no->item);
-   }   
+    if (no == NULL)
+    {
+        return;
+    }
+    else
+    {
+        printa_pos(no->esq);
+        printa_pos(no->dir);
+        printf("%d ", no->item);
+    }
 }
-int quant_NO (arvore* no)  
+
+int quant_NO(arvore *no)
 {
-    if (no==NULL)
+    if (no == NULL)
     {
         return 0;
     }
-    int esq=quant_NO(no->esq);
-    int dir=quant_NO(no->dir);
-    return (esq + dir +1);
+    int esq = quant_NO(no->esq);
+    int dir = quant_NO(no->dir);
+    return (esq + dir + 1);
 }
 
-void printa_lista (lista* no)
+void printa_lista(lista *no)
 {
-    while (no!=NULL)
+    while (no != NULL)
     {
-        printf("%d ",no->num);
-        no=no->next;
+        printf("%d ", no->num);
+        no = no->next;
     }
     printf("\n");
 }
 
-int busca_arv_bin(arvore* raiz, int item)
+int busca_arv_bin(arvore *raiz, int item)
 {
-    int cont=0;
-    if(raiz==NULL)
+    int cont = 0;
+    if (raiz == NULL)
     {
         return 0;
     }
-    arvore* atual=raiz;
+    arvore *atual = raiz;
     while (atual != NULL)
     {
         cont++;
-        if (item==atual->item)
+        if (item == atual->item)
         {
             return cont;
         }
-        if (item<=atual->item)
+        if (item <= atual->item)
         {
-            atual= atual->esq;
+            atual = atual->esq;
         }
         else
         {
-            atual=atual->dir;
+            atual = atual->dir;
         }
-
     }
     return 0;
 }
 
-int busca_lista(lista* inicio, int item)
+int busca_lista(lista *inicio, int item)
 {
-    int cont=0;
-    if (inicio==NULL) 
+    int cont = 0;
+    if (inicio == NULL)
     {
         return 0;
     }
-    lista *atual=inicio;
-    while(atual != NULL)
+    lista *atual = inicio;
+    while (atual != NULL)
     {
         cont++;
-        if(item==atual->num)
+        if (item == atual->num)
         {
             return cont;
         }
-        atual=atual->next;
+        atual = atual->next;
     }
     return 0;
 }
 
-int main ()
+int main()
 {
     int i, numero_entradas, item, cont_lista, cont_arvore;
-    arvore* nova = NULL; 
-    lista* new = NULL;
+    arvore *nova_arvore = NULL;
+    lista *nova_lista = NULL;
 
-    FILE* imput = fopen("entrada.txt", "r");
+    FILE *imput = fopen("entrada.txt", "r");
 
-    if(imput == NULL)
+    if (imput == NULL)
     {
         printf("A entrada nao existe\n");
         return 0;
     }
-    //ler a entrada pelo arquivo
-    fscanf(imput, "%d", &numero_entradas); 
+    // ler a entrada pelo arquivo
+    fscanf(imput, "%d", &numero_entradas);
     for (i = 0; i < numero_entradas; i++)
-    { 
-        fscanf(imput, "%d", &item);             
-        nova = insere(nova,item);        
-        new = cria_elo(new,item);
-    } 
-    printf( "Avore Busca Binaria:\n");       
-    printa_pre(nova);
-    printf ("\n");  
-    printf( "Lista:\n");
-    printa_lista(new); 
+    {
+        fscanf(imput, "%d", &item);
+        nova_arvore = insere(nova_arvore, item);
+        nova_lista = cria_elo(nova_lista, item);
+    }
+    printf("Avore Busca Binaria:\n");
+    printa_pre(nova_arvore);
+    printf("\n");
+    printf("Lista:\n");
+    printa_lista(nova_lista);
 
-    fclose(imput);
+    FILE *output = fopen("saida.txt", "w");
 
-    FILE* output = fopen("saida.txt", "w");
+    // planta uma semente aleatoria para que os numeros selecionados sejam diferentes
+    srand(time(NULL));
 
     int quant_numeros;
 
-    //planta uma semente aleatoria para que os numeros selecionados sejam diferentes
-    srand(time(NULL)); 
-    for(quant_numeros = 0; quant_numeros < 200; quant_numeros++)
+    // gera 200 numeros aleatorios e aplica a função de busca para comparar as iterações
+    for (quant_numeros = 0; quant_numeros < 200; quant_numeros++)
     {
         int numero_aleatorio = rand() % numero_entradas;
-        cont_arvore = busca_arv_bin (nova, numero_aleatorio);
-        cont_lista = busca_lista(new, numero_aleatorio);
+        cont_arvore = busca_arv_bin(nova_arvore, numero_aleatorio);
+        cont_lista = busca_lista(nova_lista, numero_aleatorio);
         fprintf(output, "%d,%d,%d\n", numero_aleatorio, cont_lista, cont_arvore);
 
-        //print visual
+        // print visual
         printf("Número selecionado: %d\n", numero_aleatorio);
         printf("Iterações na lista: %d\n", cont_lista);
         printf("Iterações na árvore: %d\n", cont_arvore);
         printf("\n");
-        
     }
     fclose(output);
     printf("\n");
