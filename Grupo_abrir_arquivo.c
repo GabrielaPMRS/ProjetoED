@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-//teste;
-//testando;
 
 struct byte_info
 {
@@ -10,8 +8,26 @@ struct byte_info
     long posicao;
 };
 
+void sortFrequency(struct byte_info info[]) // Função de ordenar o array da struct byte
+{
+    for (int j = 256; j >= 0; j--) //Fiz um bubbleSort tradicional
+    {
+        for (int i = 0; i < j; i++)
+        {
+            if (info[i].frequencia < info[i + 1].frequencia)
+            {
+                struct byte_info aux = info[i];
+                info[i] = info[i + 1];
+                info[i + 1] = aux;
+            }
+        }
+    }
+}
+
 void imprimir_frequencia(struct byte_info info[])
  {
+    sortFrequency(info);
+    
     for (int i = 0; i < 256; i++) {
         if (info[i].frequencia > 0) 
         {
