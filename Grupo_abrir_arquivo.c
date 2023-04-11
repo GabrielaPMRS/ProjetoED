@@ -24,15 +24,17 @@ void sortFrequency(struct byte_info info[]) // Função de ordenar o array da st
     }
 }
 
-void imprimir_frequencia(struct byte_info info[])
- {
-    sortFrequency(info);
-    
-    for (int i = 0; i < 256; i++) {
-        if (info[i].frequencia > 0) 
+void imprimir_frequencia(FILE *saida, struct byte_info info[])
+{
+
+    sortFrequency(info); // Antes de printar, ele ordena o array
+
+    for (int i = 0; i < 256; i++)
+    {
+        if (info[i].frequencia > 0)
         {
-            printf("Byte: %d, Frequência: %d, Posição: %ld\n", i, info[i].frequencia, info[i].posicao);
-        }
+            fprintf(saida, "Byte: %d, Frequencia: %d, Posicao: %ld\n", i, info[i].frequencia, info[i].posicao);
+        } //Agora no lugar de printar o for, ele vai ser escrito no arquivo saida.txt
     }
 }
 
@@ -66,7 +68,19 @@ int main()
     }
 
     fclose(fp);
-    imprimir_frequencia(info);
+
+    FILE *saida = fopen("saida.txt", "w"); // w modo de escrita que cria e sobrescreve o arquivo .txt
+    
+    imprimir_frequencia(saida, info);    // Passa o ponteiro do arquivo
+                                        //O ponteiro do arquivo é uma referência ao objeto FILE que representa o arquivo aberto. 
+                                        
+    fclose(saida); // "Fecha" o arquivo criado
+
+
+    // Agora, você pode usar o array "frequencia" para construir a árvore de Huffman
+    // e gerar os códigos binários para cada byte. Para associar a posição de cada byte
+    // à sua frequência, basta acessar o array "info".
+
 
     // Agora, você pode usar o array "frequencia" para construir a árvore de Huffman
     // e gerar os códigos binários para cada byte. Para associar a posição de cada byte
