@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <time.h>
 
 typedef struct lista
 {
@@ -195,35 +196,48 @@ int main ()
     int i,n,item, contlist,contarv;
     arvore* nova = NULL; 
     lista* new = NULL;
-    FILE* imput = fopen("data.txt", "r");
+    FILE* imput = fopen("entrada_pequena.txt", "r");
     if(imput == NULL)
     {
         printf("A entrada nao existe\n");
         return 0;
     }
-    //printf("Diga quantos elementos serao inseridos\n");
-    //scanf("%d",&n);
     fscanf(imput, "%d", &n); //ler a entrada pelo arquivo
-    for (i=0;i<n;i++)
-    {
-        //printf("Entre com o %d item\n",i+1);
-        //scanf("%d",&item); 
+    for (i = 0; i < n; i++)
+    { 
         fscanf(imput, "%d", &item);             
-        nova=insere(nova,item);        
-        new=cria_elo(new,item);
+        nova = insere(nova,item);        
+        new = cria_elo(new,item);
     } 
     printf( "Avore Busca Binaria:\n");       
     printa_pre(nova);
     printf ("\n");  
-    printf( "Agora a lista:\n");
+    printf( "Lista:\n");
     printa_lista(new); 
-    //printf("Agora entre com o numero que voce quer buscar:\n");
-    //scanf("%d",&item);
-    fscanf(imput, "%d", &item);
+
+    //fscanf(imput, "%d", &item);
     fclose(imput);
-    contarv= busca_arv_bin (nova,item);
-    contlist=busca_lista(new,item);
-    if (contarv==0)
+
+    FILE* output = fopen("saida.txt", "w");
+    int quant_numeros;
+    printf("numeros aleatorios: \n");
+    srand(time(NULL));
+    for(quant_numeros = 0; quant_numeros < (int)(0.25 * n); quant_numeros++)
+    {
+        int r = rand() % n;
+        //printf("%d: ", r);
+        contarv = busca_arv_bin (nova,r);
+        contlist = busca_lista(new,r);
+        //printf("%d ", contlist);
+        //printf("%d\n", contarv);
+
+        fprintf(output, "%d,%d,%d\n", r, contlist, contarv);
+        
+    }
+    fclose(output);
+    printf("\n");
+    
+    if (contarv == 0)
     {
         printf("Nao encontrado na arvore\n");
     }
@@ -232,7 +246,7 @@ int main ()
         printf("encontrado na arvore com %d iteracoes\n",contarv);
 
     }  
-    if (contlist==0)
+    if (contlist == 0)
     {
         printf("Nao encontrado na lista\n");
     }
