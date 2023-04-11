@@ -193,17 +193,20 @@ int busca_lista(lista* inicio, int item)
 
 int main ()
 {
-    int i,n,item, contlist,contarv;
+    int i, numero_entradas, item, cont_lista, cont_arvore;
     arvore* nova = NULL; 
     lista* new = NULL;
-    FILE* imput = fopen("entrada_pequena.txt", "r");
+
+    FILE* imput = fopen("entrada.txt", "r");
+
     if(imput == NULL)
     {
         printf("A entrada nao existe\n");
         return 0;
     }
-    fscanf(imput, "%d", &n); //ler a entrada pelo arquivo
-    for (i = 0; i < n; i++)
+    //ler a entrada pelo arquivo
+    fscanf(imput, "%d", &numero_entradas); 
+    for (i = 0; i < numero_entradas; i++)
     { 
         fscanf(imput, "%d", &item);             
         nova = insere(nova,item);        
@@ -215,45 +218,29 @@ int main ()
     printf( "Lista:\n");
     printa_lista(new); 
 
-    //fscanf(imput, "%d", &item);
     fclose(imput);
 
     FILE* output = fopen("saida.txt", "w");
-    int quant_numeros;
-    printf("numeros aleatorios: \n");
-    srand(time(NULL));
-    for(quant_numeros = 0; quant_numeros < (int)(0.25 * n); quant_numeros++)
-    {
-        int r = rand() % n;
-        //printf("%d: ", r);
-        contarv = busca_arv_bin (nova,r);
-        contlist = busca_lista(new,r);
-        //printf("%d ", contlist);
-        //printf("%d\n", contarv);
 
-        fprintf(output, "%d,%d,%d\n", r, contlist, contarv);
+    int quant_numeros;
+
+    //planta uma semente aleatoria para que os numeros selecionados sejam diferentes
+    srand(time(NULL)); 
+    for(quant_numeros = 0; quant_numeros < 200; quant_numeros++)
+    {
+        int numero_aleatorio = rand() % numero_entradas;
+        cont_arvore = busca_arv_bin (nova, numero_aleatorio);
+        cont_lista = busca_lista(new, numero_aleatorio);
+        fprintf(output, "%d,%d,%d\n", numero_aleatorio, cont_lista, cont_arvore);
+
+        //print visual
+        printf("Número selecionado: %d\n", numero_aleatorio);
+        printf("Iterações na lista: %d\n", cont_lista);
+        printf("Iterações na árvore: %d\n", cont_arvore);
+        printf("\n");
         
     }
     fclose(output);
     printf("\n");
-    
-    if (contarv == 0)
-    {
-        printf("Nao encontrado na arvore\n");
-    }
-    else
-    {
-        printf("encontrado na arvore com %d iteracoes\n",contarv);
-
-    }  
-    if (contlist == 0)
-    {
-        printf("Nao encontrado na lista\n");
-    }
-    else
-    {
-        printf("encontrado na lista com %d iteracoes\n",contlist);
-
-    }    
     return 0;
 }
