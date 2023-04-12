@@ -223,7 +223,7 @@ int main()
     int quant_numeros;
 
     // gera 200 numeros aleatorios e aplica a função de busca para comparar as iterações
-    for (quant_numeros = 0; quant_numeros < 200; quant_numeros++)
+    for (quant_numeros = 0; quant_numeros < 50; quant_numeros++)
     {
         int numero_aleatorio = rand() % numero_entradas;
         cont_arvore = busca_arv_bin(nova_arvore, numero_aleatorio);

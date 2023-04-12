@@ -1,0 +1,3 @@
+filename = 'saida.txt'
+m = csvread(filename)
+disp(m(1,:))
