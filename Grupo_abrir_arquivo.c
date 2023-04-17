@@ -33,8 +33,9 @@ fila *insere_tree (fila *base)
     segundo->next=NULL;
 }
 
-void insere_fp (fila *base, fila *novo)
+fila* insere_fp (fila *base, fila *novo)
 {
+    fila *inicio = base;
     fila *corrente = base;
     fila *anterior=NULL;
     while (corrente->next != NULL)
@@ -49,8 +50,24 @@ void insere_fp (fila *base, fila *novo)
             break;
         }                 
     }
-    anterior->next = novo;
-    novo->next=corrente; 
+    if (corrente->next==NULL && corrente->freq!=novo->freq)
+    {
+        corrente->next=novo;
+        novo->next=NULL;
+        return inicio;
+    }
+    if (anterior!=NULL)
+    {
+        anterior->next = novo;
+        novo->next=corrente;
+        return inicio;         
+    }
+    else
+    {
+        novo->next=corrente;
+        corrente=novo;
+        return corrente;
+    }        
 }
 
 
@@ -163,7 +180,8 @@ int gera_fila (struct byte_info info[])
     printa_queue(queue);
     fila *no_teste = NULL;
     no_teste= cria_no_teste(no_teste);
-    insere_fp (queue , no_teste);
+    queue = insere_fp (queue , no_teste);
+    printf("nova fila gerada:\n");
     printa_queue(queue);
 }
 
