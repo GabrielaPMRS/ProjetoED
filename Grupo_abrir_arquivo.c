@@ -1,5 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <limits.h>
 
 
 struct byte_info
@@ -8,42 +11,65 @@ struct byte_info
     long posicao;
 };
 
-void sortFrequency(struct byte_info info[]) // Função de ordenar o array da struct byte
+typedef struct lista
 {
-    for (int j = 256; j >= 0; j--) //Fiz um bubbleSort tradicional
+    int byte;
+    int freq;
+    long pos;
+    struct lista* next;
+} lista;
+
+lista* cria_no (lista* base, struct byte_info ref,int byte)
+{
+    lista* nova=(lista*)malloc(sizeof(lista));
+    nova->byte=byte;
+    nova->freq=ref.frequencia;
+    nova->pos=ref.posicao;
+    nova->next=base;
+    return nova;    
+}
+
+void imprimir_frequencia(struct byte_info info[])
+ {
+    for (int i = 0; i < 256; i++) 
     {
-        for (int i = 0; i < j; i++)
+        if (info[i].frequencia > 0) 
         {
-            if (info[i].frequencia < info[i + 1].frequencia)
-            {
-                struct byte_info aux = info[i];
-                info[i] = info[i + 1];
-                info[i + 1] = aux;
-            }
+            printf("Byte: %d, Frequência: %d, Posição: %ld\n", i, info[i].frequencia, info[i].posicao);
         }
     }
 }
 
-void imprimir_frequencia(FILE *saida, struct byte_info info[])
+void printa_list(lista* list)
 {
-
-    sortFrequency(info); // Antes de printar, ele ordena o array
-
-    for (int i = 0; i < 256; i++)
+    if (list==NULL)
     {
-        if (info[i].frequencia > 0)
-        {
-            fprintf(saida, "Byte: %d, Frequencia: %d, Posicao: %ld\n", i, info[i].frequencia, info[i].posicao);
-        } //Agora no lugar de printar o for, ele vai ser escrito no arquivo saida.txt
+        return;
+    }
+    while(list!=NULL)
+    {
+        printf("Byte: %d, Frequencia: %d, Pos: %ld\n",list->byte,list->freq,list->pos);
+        list=list->next;
     }
 }
 
-int main() 
-{
-    char nome_arquivo[100];
-    printf("Digite o nome do arquivo com a extensao: ");
-    scanf("%s", nome_arquivo);
+void gera_lista (struct byte_info info[])
+ {
+    lista* list= NULL;
+    for (int i = 0; i < 256; i++)
+     {
+        if (info[i].frequencia > 0) 
+        {
+            list = cria_no (list,info[i],i);            
+        }
+    }  
+    printa_list(list);  
+}
 
+
+
+int abrir (char nome_arquivo[100])
+{
     FILE* fp = fopen(nome_arquivo, "rb"); //rb modo binario de leitura.
     if (fp == NULL) 
     {
@@ -66,25 +92,17 @@ int main()
             info[buffer[i]].posicao = posicao++;
         }
     }
-
     fclose(fp);
+    //imprimir_frequencia(info);
+    gera_lista(info);
+    return 0;
+}
 
-    FILE *saida = fopen("saida.txt", "w"); // w modo de escrita que cria e sobrescreve o arquivo .txt
-    
-    imprimir_frequencia(saida, info);    // Passa o ponteiro do arquivo
-                                        //O ponteiro do arquivo é uma referência ao objeto FILE que representa o arquivo aberto. 
-                                        
-    fclose(saida); // "Fecha" o arquivo criado
-
-
-    // Agora, você pode usar o array "frequencia" para construir a árvore de Huffman
-    // e gerar os códigos binários para cada byte. Para associar a posição de cada byte
-    // à sua frequência, basta acessar o array "info".
-
-
-    // Agora, você pode usar o array "frequencia" para construir a árvore de Huffman
-    // e gerar os códigos binários para cada byte. Para associar a posição de cada byte
-    // à sua frequência, basta acessar o array "info".
-
+int main() 
+{
+    char nome_arquivo[100];
+    printf("Digite o nome do arquivo com a extensao: ");
+    scanf("%s", nome_arquivo);  
+    abrir(nome_arquivo);    
     return 0;
 }
