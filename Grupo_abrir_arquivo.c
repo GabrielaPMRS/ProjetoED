@@ -18,21 +18,6 @@ typedef struct fila
     struct fila *dir;
 } fila;
 
-fila *insere_tree (fila *base)
-{
-    fila * inicio = base;
-    fila * primeiro = base;
-    fila * segundo = base->next;
-    fila *nova= (fila *) malloc(sizeof(fila));
-    nova-> byte = 42;
-    nova->freq=primeiro->freq + segundo->freq;
-    nova->next=NULL;
-    nova->esq=primeiro;
-    nova->dir=segundo; // terminada a primeira parte de inserir o novo no (arvore)
-    primeiro->next=NULL;
-    segundo->next=NULL;
-}
-
 fila* insere_fp (fila *base, fila *novo)
 {
     fila *inicio = base;
@@ -70,9 +55,23 @@ fila* insere_fp (fila *base, fila *novo)
     }        
 }
 
+fila *insere_tree (fila *base)
+{
+    fila * inicio = base;
+    fila * primeiro = base;
+    fila * segundo = base->next;
+    fila *nova= (fila *) malloc(sizeof(fila));
+    nova-> byte = 42;
+    nova->freq=primeiro->freq + segundo->freq;
+    nova->next=NULL;
+    nova->esq=primeiro;
+    nova->dir=segundo; // terminada a primeira parte de inserir o novo no (arvore)
+    primeiro->next=NULL;
+    segundo->next=NULL;
+    base = insere_fp(base,nova); //inseri o novo no na fila
+}
 
-
-fila *cria_no(fila *base, struct byte_info ref, int byte)
+fila *cria_no (fila *base, struct byte_info ref, int byte)
 {
     fila *nova = (fila *)malloc(sizeof(fila));
     nova->byte = byte;
@@ -164,10 +163,11 @@ fila *cria_no_teste (fila *base)
     return nova;
 }
 
-int gera_fila (struct byte_info info[])
+fila *gera_fila (struct byte_info info[])
 {
+    fila* queue = NULL;
     int cont = 0;
-    fila *queue = NULL;
+    
     for (int i = 0; i < 256; i++)
     {
         if (info[i].frequencia > 0)
@@ -175,23 +175,18 @@ int gera_fila (struct byte_info info[])
             cont++;
             queue = cria_no(queue, info[i], i);
         }
-    }
-    ordena(queue);
-    printa_queue(queue);
-    fila *no_teste = NULL;
-    no_teste= cria_no_teste(no_teste);
-    queue = insere_fp (queue , no_teste);
-    printf("nova fila gerada:\n");
-    printa_queue(queue);
+    } 
+    return queue;  
 }
 
-int abrir(char nome_arquivo[100])
+fila* abrir(char nome_arquivo[100])
 {
+    fila *queue = NULL;
     FILE *fp = fopen(nome_arquivo, "rb"); // rb modo binario de leitura.
     if (fp == NULL)
     {
         printf("Erro ao abrir o arquivo.\n");
-        return 1;
+        return queue;
     }
 
     int frequencia[256] = {0};
@@ -207,24 +202,23 @@ int abrir(char nome_arquivo[100])
             info[buffer[i]].frequencia++;
         }
     }
-    fclose(fp);
-    // imprimir_frequencia(info);
-    gera_fila(info);
-
-    return 0;
+    fclose(fp);    
+    queue = gera_fila(info);
+    return queue;
 }
-
-
-
 
 int main()
 {
     char nome_arquivo[100];
     printf("Digite o nome do arquivo com a extensao: ");
-    scanf("%s", nome_arquivo);
-    abrir(nome_arquivo);
-    
-
-
+    scanf("%s", nome_arquivo);    
+    fila *queue = abrir(nome_arquivo);
+    ordena(queue);
+    printa_queue(queue);
+    fila *no_teste = NULL;
+    no_teste= cria_no_teste(no_teste);
+    queue = insere_fp (queue , no_teste);
+    printf("nova fila gerada:\n");
+    printa_queue(queue);
     return 0;
 }
