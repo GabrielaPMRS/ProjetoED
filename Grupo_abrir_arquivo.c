@@ -57,9 +57,10 @@ fila* insere_fp (fila *base, fila *novo)
 
 fila *insere_tree (fila *base)
 {
-    fila * inicio = base;
+    
     fila * primeiro = base;
     fila * segundo = base->next;
+    fila * terceiro = base->next->next;
     fila *nova= (fila *) malloc(sizeof(fila));
     nova-> byte = 42;
     nova->freq=primeiro->freq + segundo->freq;
@@ -68,7 +69,9 @@ fila *insere_tree (fila *base)
     nova->dir=segundo; // terminada a primeira parte de inserir o novo no (arvore)
     primeiro->next=NULL;
     segundo->next=NULL;
+    base= terceiro;
     base = insere_fp(base,nova); //inseri o novo no na fila
+    return base;
 }
 
 fila *cria_no (fila *base, struct byte_info ref, int byte)
@@ -219,6 +222,9 @@ int main()
     no_teste= cria_no_teste(no_teste);
     queue = insere_fp (queue , no_teste);
     printf("nova fila gerada:\n");
+    printa_queue(queue);
+    printf("testando a primeira mexida para arvore \n");
+    queue = insere_tree (queue);
     printa_queue(queue);
     return 0;
 }
