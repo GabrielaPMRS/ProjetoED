@@ -18,63 +18,63 @@ typedef struct fila
     struct fila *dir;
 } fila;
 
-fila* insere_fp (fila *base, fila *novo)
+fila *insere_fp(fila *base, fila *novo)
 {
     fila *inicio = base;
     fila *corrente = base;
-    fila *anterior=NULL;
+    fila *anterior = NULL;
     while (corrente->next != NULL)
     {
-        if(novo->freq > corrente->freq)
+        if (novo->freq > corrente->freq)
         {
             anterior = corrente;
-            corrente= corrente->next;
+            corrente = corrente->next;
         }
         else
         {
             break;
-        }                 
+        }
     }
-    if (corrente->next==NULL && corrente->freq!=novo->freq)
+    if (corrente->next == NULL && corrente->freq != novo->freq)
     {
-        corrente->next=novo;
-        novo->next=NULL;
+        corrente->next = novo;
+        novo->next = NULL;
         return inicio;
     }
-    if (anterior!=NULL)
+    if (anterior != NULL)
     {
         anterior->next = novo;
-        novo->next=corrente;
-        return inicio;         
+        novo->next = corrente;
+        return inicio;
     }
     else
     {
-        novo->next=corrente;
-        corrente=novo;
+        novo->next = corrente;
+        corrente = novo;
         return corrente;
-    }        
+    }
 }
 
-fila *insere_tree (fila *base)
+fila *insere_tree(fila *base)
 {
-    
-    fila * primeiro = base;
-    fila * segundo = base->next;
-    fila * terceiro = base->next->next;
-    fila *nova= (fila *) malloc(sizeof(fila));
-    nova-> byte = 42;
-    nova->freq=primeiro->freq + segundo->freq;
-    nova->next=NULL;
-    nova->esq=primeiro;
-    nova->dir=segundo; // terminada a primeira parte de inserir o novo no (arvore)
-    primeiro->next=NULL;
-    segundo->next=NULL;
-    base= terceiro;
-    base = insere_fp(base,nova); //inseri o novo no na fila
+
+    fila *primeiro = base;
+    fila *segundo = base->next;
+    fila *terceiro = base->next->next;
+    fila *nova = (fila *)malloc(sizeof(fila));
+    nova->byte = 42;
+    nova->freq = primeiro->freq + segundo->freq;
+    nova->next = NULL;
+    nova->esq = primeiro;
+    nova->dir = segundo; // terminada a primeira parte de inserir o novo no (arvore)
+    primeiro->next = NULL;
+    segundo->next = NULL;
+    base = terceiro;
+    base = insere_fp(base, nova); // inseri o novo no na fila
     return base;
 }
 
-fila *cria_no (fila *base, struct byte_info ref, int byte)
+fila *cria_no(fila *base, struct byte_info ref, int byte)
 {
     fila *nova = (fila *)malloc(sizeof(fila));
     nova->byte = byte;
@@ -155,7 +155,7 @@ void printa_queue(fila *queue)
     }
 }
 
-fila *cria_no_teste (fila *base)
+fila *cria_no_teste(fila *base)
 {
     fila *nova = (fila *)malloc(sizeof(fila));
     nova->byte = 65;
@@ -166,11 +166,11 @@ fila *cria_no_teste (fila *base)
     return nova;
 }
 
-fila *gera_fila (struct byte_info info[])
+fila *gera_fila(struct byte_info info[])
 {
-    fila* queue = NULL;
+    fila *queue = NULL;
     int cont = 0;
-    
+
     for (int i = 0; i < 256; i++)
     {
         if (info[i].frequencia > 0)
@@ -178,11 +178,11 @@ fila *gera_fila (struct byte_info info[])
             cont++;
             queue = cria_no(queue, info[i], i);
         }
-    } 
-    return queue;  
+    }
+    return queue;
 }
 
-fila* abrir(char nome_arquivo[100])
+fila *abrir(char nome_arquivo[100])
 {
     fila *queue = NULL;
     FILE *fp = fopen(nome_arquivo, "rb"); // rb modo binario de leitura.
@@ -205,7 +205,7 @@ fila* abrir(char nome_arquivo[100])
             info[buffer[i]].frequencia++;
         }
     }
-    fclose(fp);    
+    fclose(fp);
     queue = gera_fila(info);
     return queue;
 }
@@ -214,17 +214,17 @@ int main()
 {
     char nome_arquivo[100];
     printf("Digite o nome do arquivo com a extensao: ");
-    scanf("%s", nome_arquivo);    
+    scanf("%s", nome_arquivo);
     fila *queue = abrir(nome_arquivo);
     ordena(queue);
     printa_queue(queue);
     fila *no_teste = NULL;
-    no_teste= cria_no_teste(no_teste);
-    queue = insere_fp (queue , no_teste);
+    no_teste = cria_no_teste(no_teste);
+    queue = insere_fp(queue, no_teste);
     printf("nova fila gerada:\n");
     printa_queue(queue);
     printf("testando a primeira mexida para arvore \n");
-    queue = insere_tree (queue);
+    queue = insere_tree(queue);
     printa_queue(queue);
     return 0;
 }
