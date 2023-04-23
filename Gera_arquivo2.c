@@ -521,6 +521,20 @@ void comprime (fila* queue, tabela_hash *base, char arquivo [100])
         }
         printf("valor do j:%d\n",j);         
     }
+    printf ("Agora vou colocar a arvore de hufmman\n");
+    void escreve_pre_ordem(fila* raiz)  // aninhada para permanecer.
+    {
+        if (raiz == NULL) 
+        {
+            return;
+        }
+        fwrite(&raiz->byte,1,1,fs);
+        printf("GRAVEI este byte no arquivo:");
+        print_byte_in_binary(raiz->byte);        
+        escreve_pre_ordem(raiz->esq);
+        escreve_pre_ordem(raiz->dir);
+    }
+    escreve_pre_ordem(queue);
     fclose(fp);
     fclose(fs);    
 }
