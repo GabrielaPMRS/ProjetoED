@@ -445,7 +445,7 @@ void comprime(fila *queue, tabela_hash *base, char arquivo[100])
     escreve_pre_ordem(queue);
     while (fread(byte, 1, 1, fs))
     {
-        fwrite(&byte_out, 1, 1, huff);
+        fwrite(byte, 1, 1, huff);
     }
     fclose(huff);
 }
