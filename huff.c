@@ -11,8 +11,8 @@ struct list_node
     list_node *next;
 };
 
-typedef struct link_list link_list;
-struct link_list
+typedef struct linked_list linked_list;
+struct linked_list
 {
     list_node *head;
     list_node *tail;
@@ -24,7 +24,7 @@ struct byte_info
 {
     unsigned char byte;
     int frequencia;
-    link_list *bites;
+    linked_list *bits;
 };
 
 typedef struct Huff_node Huff_node;
@@ -43,6 +43,28 @@ struct Huff
     Huff_node *head;
 };
 
+linked_list *create_linked_list()
+{
+    linked_list *list = (linked_list *)malloc(sizeof(linked_list));
+    list->head = NULL;
+    return list;
+}
+
+void add_linked_list(linked_list *list, int valor)
+{
+    list_node *new_node = (list_node *)malloc(sizeof(list_node));
+    new_node->valor = valor;
+    new_node->next = list->head;
+    list->head = new_node;
+}
+
+list_node *remove_linked_node(linked_list *bits_list)
+{
+    list_node *removed_node = bits_list->head;
+    bits_list->head = bits_list->head->next;
+    free(removed_node);
+}
+
 void inicializar(byte_info sequencia_bytes[])
 {
     int i;
@@ -50,6 +72,7 @@ void inicializar(byte_info sequencia_bytes[])
     {
         sequencia_bytes[i].byte = i;
         sequencia_bytes[i].frequencia = 0;
+        sequencia_bytes[i].bits = NULL;
     }
 }
 
@@ -168,6 +191,42 @@ void print_pre_order(Huff_node *bt)
     }
 }
 
+void search_bytes(Huff_node *tree, linked_list *bits_list, byte_info sequencia_bytes[])
+{
+    if (tree->left == NULL && tree->right == NULL)
+    {
+        linked_list *bit_position = create_linked_list();
+        list_node *aux = bits_list->head;
+        while (aux != NULL)
+        {
+            add_linked_list(bit_position, aux->valor);
+            aux = aux->next;
+        }
+        sequencia_bytes[tree->byte].bits = bit_position;
+    }
+    else
+    {
+        add_linked_list(bits_list, 0);
+        search_bytes(tree->left, bits_list, sequencia_bytes);
+        remove_linked_node(bits_list);
+
+        add_linked_list(bits_list, 1);
+        search_bytes(tree->right, bits_list, sequencia_bytes);
+        remove_linked_node(bits_list);
+    }
+}
+
+void print_linked_list(linked_list *list)
+{
+    list_node *aux = list->head;
+    while (aux != NULL)
+    {
+        printf("%d", aux->valor);
+        aux = aux->next;
+    }
+    printf("\n");
+}
+
 int main()
 {
     char file_name[100] = "teste.txt";
@@ -181,6 +240,17 @@ int main()
     print_queue(huff);
     Huff_node *tree = create_huffman_tree(huff);
     print_pre_order(tree);
+    printf("\n");
+    linked_list *bits_list = create_linked_list();
+    search_bytes(tree, bits_list, sequencia_bytes);
+    int i;
+    for (i = 0; i < 256; i++)
+    {
+        if (sequencia_bytes[i].frequencia != 0)
+        {
+            print_linked_list(sequencia_bytes[i].bits);
+        }
+    }
 
     // huff *sequence = create_Huff();
 }
