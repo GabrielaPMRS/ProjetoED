@@ -1,6 +1,6 @@
 # ProjetoED - Codificação Huffman
 
  Integrantes:
- - Eugênio Correia 
+ - Eugenio Corrêa 
  - Gabriela Pontes
  - José Félix
