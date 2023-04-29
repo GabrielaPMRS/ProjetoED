@@ -47,6 +47,7 @@ linked_list *create_linked_list()
 {
     linked_list *list = (linked_list *)malloc(sizeof(linked_list));
     list->head = NULL;
+    list->size = 0;
     return list;
 }
 
@@ -55,7 +56,30 @@ void add_linked_list(linked_list *list, int valor)
     list_node *new_node = (list_node *)malloc(sizeof(list_node));
     new_node->valor = valor;
     new_node->next = list->head;
+    list->size += 1;
     list->head = new_node;
+}
+
+void add_linked_list_tail(linked_list *list, int valor)
+{
+    list_node *new_node = (list_node *)malloc(sizeof(list_node));
+    new_node->valor = valor;
+    list_node *current = list->head;
+    list->size += 1;
+    if (list->head == NULL)
+    {
+        list->head = new_node;
+        new_node->next = NULL;
+    }
+    else
+    {
+        while (current->next != NULL)
+        {
+            current = current->next;
+        }
+        current->next = new_node;
+        new_node->next = NULL;
+    }
 }
 
 list_node *remove_linked_node(linked_list *bits_list)
@@ -63,6 +87,18 @@ list_node *remove_linked_node(linked_list *bits_list)
     list_node *removed_node = bits_list->head;
     bits_list->head = bits_list->head->next;
     free(removed_node);
+}
+
+void print_linked_list(linked_list *list)
+{
+
+    list_node *aux = list->head;
+    while (aux != NULL)
+    {
+        printf("%c ", aux->valor);
+        aux = aux->next;
+    }
+    printf("\n");
 }
 
 void inicializar(byte_info sequencia_bytes[])
@@ -181,13 +217,25 @@ Huff_node *create_huffman_tree(Huff *huff)
     return huff->head;
 }
 
-void print_pre_order(Huff_node *bt)
+list_node *saveTreeInList(Huff_node *huff, linked_list *PreOrderTree)
 {
-    if (bt != NULL)
+
+    if (huff != NULL)
     {
-        printf("%c ", bt->byte);
-        print_pre_order(bt->left);
-        print_pre_order(bt->right);
+        add_linked_list_tail(PreOrderTree, huff->byte);
+        saveTreeInList(huff->left, PreOrderTree);
+        saveTreeInList(huff->right, PreOrderTree);
+    }
+    return PreOrderTree->head;
+}
+
+void print_pre_order(Huff_node *huff)
+{
+    if (huff != NULL)
+    {
+        printf("%c ", huff->byte);
+        print_pre_order(huff->left);
+        print_pre_order(huff->right);
     }
 }
 
@@ -216,15 +264,109 @@ void search_bytes(Huff_node *tree, linked_list *bits_list, byte_info sequencia_b
     }
 }
 
-void print_linked_list(linked_list *list)
+unsigned char set_bit(unsigned char c, int i)
 {
-    list_node *aux = list->head;
+    unsigned char mask = 1 << i;
+    return mask | c;
+}
+
+int zip_tmp_file(char filename[], byte_info sequencia_bytes[])
+{
+    FILE *original = fopen(filename, "rb");
+    FILE *temp = fopen("temp.txt", "wb");
+
+    unsigned char byte;
+    unsigned char compressed_byte = 0;
+    int i = 7;
+
+    while (fread(&byte, sizeof(unsigned char), 1, original) > 0)
+    {
+        list_node *bits = sequencia_bytes[byte].bits->head;
+
+        while (bits != NULL)
+        {
+            if (i < 0)
+            {
+                fwrite(&compressed_byte, sizeof(unsigned char), 1, temp);
+                compressed_byte = 0;
+                i = 7;
+            }
+
+            if (bits->valor == 1)
+            {
+                compressed_byte = set_bit(compressed_byte, i);
+            }
+
+            i--;
+            bits = bits->next;
+        }
+    }
+    fwrite(&compressed_byte, sizeof(unsigned char), 1, temp);
+
+    int trash_size = i + 1;
+
+    fclose(original);
+    fclose(temp);
+    return trash_size;
+}
+
+void header(char filename[], byte_info sequencia_bytes[], linked_list *PreOrderTree)
+{
+    int trash_size = zip_tmp_file(filename, sequencia_bytes);
+    int tree_size = PreOrderTree->size;
+    unsigned char header[2] = {0};
+
+    int i = 5;
+
+    while (trash_size != 0)
+    {
+        if (trash_size % 2 == 1)
+        {
+            header[0] = set_bit(header[0], i);
+        }
+
+        i++;
+        trash_size = trash_size / 2;
+    }
+
+    i = 0;
+
+    while (tree_size != 0 || i < 8)
+    {
+        if (tree_size % 2 == 1)
+        {
+            header[1] = set_bit(header[1], i);
+        }
+
+        i++;
+        tree_size = tree_size / 2;
+    }
+
+    if (tree_size > 0)
+    {
+        i = 0;
+        while (tree_size != 0 || i < 6)
+        {
+            if (tree_size % 2 == 1)
+            {
+                header[0] = set_bit(header[0], i);
+            }
+            i++;
+            tree_size = tree_size / 2;
+        }
+    }
+
+    FILE *hd = fopen("header.txt", "wb");
+    fwrite(header, sizeof(unsigned char), 2, hd);
+
+    list_node *aux = PreOrderTree->head;
     while (aux != NULL)
     {
-        printf("%d", aux->valor);
+        unsigned char byte = (unsigned char)aux->valor;
+        fwrite(&byte, sizeof(unsigned char), 1, hd);
         aux = aux->next;
     }
-    printf("\n");
+    fclose(hd);
 }
 
 int main()
@@ -248,9 +390,16 @@ int main()
     {
         if (sequencia_bytes[i].frequencia != 0)
         {
+            printf("%c: ", sequencia_bytes[i].byte);
             print_linked_list(sequencia_bytes[i].bits);
         }
     }
+    int trash_size = zip_tmp_file(file_name, sequencia_bytes);
+    linked_list *PreOrderTree = create_linked_list();
+    saveTreeInList(tree, PreOrderTree);
+    print_linked_list(PreOrderTree);
+    printf("treesize: %d\n", PreOrderTree->size);
+    header(file_name, sequencia_bytes, PreOrderTree);
 
     // huff *sequence = create_Huff();
 }
