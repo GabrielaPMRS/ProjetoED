@@ -217,14 +217,14 @@ Huff_node *create_huffman_tree(Huff *huff)
     return huff->head;
 }
 
-list_node *saveTreeInList(Huff_node *huff, linked_list *PreOrderTree)
+list_node *saveTreeInList(Huff_node *tree, linked_list *PreOrderTree)
 {
 
-    if (huff != NULL)
+    if (tree != NULL)
     {
-        add_linked_list_tail(PreOrderTree, huff->byte);
-        saveTreeInList(huff->left, PreOrderTree);
-        saveTreeInList(huff->right, PreOrderTree);
+        add_linked_list_tail(PreOrderTree, tree->byte);
+        saveTreeInList(tree->left, PreOrderTree);
+        saveTreeInList(tree->right, PreOrderTree);
     }
     return PreOrderTree->head;
 }
@@ -331,8 +331,12 @@ void header(char filename[], byte_info sequencia_bytes[], linked_list *PreOrderT
 
     i = 0;
 
-    while (tree_size != 0 || i < 8)
+    while (tree_size != 0)
     {
+        if (i > 7)
+        {
+            break;
+        }
         if (tree_size % 2 == 1)
         {
             header[1] = set_bit(header[1], i);
@@ -345,8 +349,12 @@ void header(char filename[], byte_info sequencia_bytes[], linked_list *PreOrderT
     if (tree_size > 0)
     {
         i = 0;
-        while (tree_size != 0 || i < 6)
+        while (tree_size != 0)
         {
+            if (i > 4)
+            {
+                break;
+            }
             if (tree_size % 2 == 1)
             {
                 header[0] = set_bit(header[0], i);
@@ -365,6 +373,14 @@ void header(char filename[], byte_info sequencia_bytes[], linked_list *PreOrderT
         unsigned char byte = (unsigned char)aux->valor;
         fwrite(&byte, sizeof(unsigned char), 1, hd);
         aux = aux->next;
+    }
+
+    FILE *temp = fopen("temp.txt", "rb");
+
+    unsigned char byte;
+    while (fread(&byte, sizeof(unsigned char), 1, temp) > 0)
+    {
+        fwrite(&byte, sizeof(unsigned char), 1, hd);
     }
     fclose(hd);
 }
