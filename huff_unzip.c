@@ -37,14 +37,12 @@ int define_file_size(FILE *compressed_file)
         // printf("byte= %c file size= %d\n", byte, file_size);
     }
     printf("file size = %d\n", file_size);
-    fclose(compressed_file);
     return file_size;
 }
 
 void define_treesize_trashsize(FILE *compressed_file, int *tree_size, int *trash_size)
 {
 
-    compressed_file = fopen("header.txt", "rb");
     unsigned char first_byte;
     fread(&first_byte, sizeof(unsigned char), 1, compressed_file);
     unsigned char second_byte;
@@ -133,7 +131,7 @@ void unzip_to_file(FILE *compresses_file, binary_tree *tree, int file_size, int 
     int bits_to_read = 0;
     int compressed_size = file_size - 2 - tree_size;
 
-    FILE *uf = fopen("unzip_file.txt", "wb");
+    FILE *uf = fopen("unzip_file", "wb");
 
     binary_tree *aux = tree;
 
@@ -152,7 +150,7 @@ void unzip_to_file(FILE *compresses_file, binary_tree *tree, int file_size, int 
 
             int res = is_bit_i_set(byte, k);
 
-            printf("%d ", res);
+            // printf("%d ", res);
             if (res == 1)
             {
                 aux = aux->right;
@@ -168,7 +166,6 @@ void unzip_to_file(FILE *compresses_file, binary_tree *tree, int file_size, int 
                 aux = tree;
             }
         }
-        printf("\n");
     }
 
     fclose(uf);
@@ -176,9 +173,15 @@ void unzip_to_file(FILE *compresses_file, binary_tree *tree, int file_size, int 
 
 int main()
 {
-    FILE *compressed_file = fopen("header.txt", "rb");
-    int trash_size, tree_size;
+    char filename[100] = "unzip.huff";
+
+    FILE *compressed_file = fopen(filename, "rb");
     int file_size = define_file_size(compressed_file);
+    fclose(compressed_file);
+
+    compressed_file = fopen(filename, "rb");
+
+    int trash_size, tree_size;
     define_treesize_trashsize(compressed_file, &tree_size, &trash_size);
 
     unsigned char pre_order_tree[tree_size];
@@ -189,4 +192,6 @@ int main()
     print_pre_order(tree);
     printf("\n");
     unzip_to_file(compressed_file, tree, file_size, tree_size, trash_size);
+
+    fclose(compressed_file);
 }
