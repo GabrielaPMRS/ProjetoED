@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include <limits.h>
 
 typedef struct list_node list_node;
 struct list_node
@@ -425,7 +423,7 @@ void header(char filename[], byte_info sequencia_bytes[], linked_list *PreOrderT
 
 int main()
 {
-    char file_name[100] = "zip2.pdf";
+    char file_name[100] = "teste.txt";
     // printf("Nome do arquivo a ser comprimido?\n");
     // scanf("%s", file_name);
     byte_info sequencia_bytes[256];
