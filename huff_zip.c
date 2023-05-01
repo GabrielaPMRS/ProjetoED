@@ -308,7 +308,7 @@ unsigned char set_bit(unsigned char c, int i)
 int zip_tmp_file(char filename[], byte_info sequencia_bytes[])
 {
     FILE *original = fopen(filename, "rb");
-    FILE *temp = fopen("temp.txt", "wb");
+    FILE *temp = fopen("temporario", "wb");
 
     unsigned char byte;
     unsigned char compressed_byte = 0;
@@ -400,7 +400,7 @@ void header(char filename[], byte_info sequencia_bytes[], linked_list *PreOrderT
         }
     }
 
-    FILE *hd = fopen("header.txt", "wb");
+    FILE *hd = fopen("output.huff", "wb");
     fwrite(header, sizeof(unsigned char), 2, hd);
 
     list_node *aux = PreOrderTree->head;
@@ -411,7 +411,7 @@ void header(char filename[], byte_info sequencia_bytes[], linked_list *PreOrderT
         aux = aux->next;
     }
 
-    FILE *temp = fopen("temp.txt", "rb");
+    FILE *temp = fopen("temporario", "rb");
 
     unsigned char byte;
     while (fread(&byte, sizeof(unsigned char), 1, temp) > 0)
@@ -423,7 +423,9 @@ void header(char filename[], byte_info sequencia_bytes[], linked_list *PreOrderT
 
 int main()
 {
-    char file_name[100] = "teste.txt";
+    char file_name[100];
+    printf("entre com o nome do arquivo a ser comprimido: \n");
+    scanf("%s", file_name);
     // printf("Nome do arquivo a ser comprimido?\n");
     // scanf("%s", file_name);
     byte_info sequencia_bytes[256];
@@ -449,12 +451,11 @@ int main()
     int trash_size = zip_tmp_file(file_name, sequencia_bytes);
 
     linked_list *PreOrderTree = create_linked_list();
-    printf("hahahahahah\n");
     saveTreeInList(tree, PreOrderTree);
 
     print_linked_list(PreOrderTree);
     printf("tree size: %d\n", PreOrderTree->size);
     header(file_name, sequencia_bytes, PreOrderTree);
 
-    // huff *sequence = create_Huff();
+    printf("arquivo comprimido em 'output.huff'\n");
 }

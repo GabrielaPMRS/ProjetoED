@@ -131,7 +131,7 @@ void unzip_to_file(FILE *compresses_file, binary_tree *tree, int file_size, int 
     int bits_to_read = 0;
     int compressed_size = file_size - 2 - tree_size;
 
-    FILE *uf = fopen("unzip_file", "wb");
+    FILE *uf = fopen("unzipped_file", "wb");
 
     binary_tree *aux = tree;
 
@@ -173,7 +173,9 @@ void unzip_to_file(FILE *compresses_file, binary_tree *tree, int file_size, int 
 
 int main()
 {
-    char filename[100] = "unzip.huff";
+    char filename[100];
+    printf("entre com o nome do arquivo a ser descomprimido \n");
+    scanf("%s", filename);
 
     FILE *compressed_file = fopen(filename, "rb");
     int file_size = define_file_size(compressed_file);
@@ -194,4 +196,5 @@ int main()
     unzip_to_file(compressed_file, tree, file_size, tree_size, trash_size);
 
     fclose(compressed_file);
+    printf("arquivo descomprimido em 'unzipped_file'\n");
 }
