@@ -79,12 +79,13 @@ void add_linked_list_tail(linked_list *list, int valor)
  * @brief Remove sempre o primeiro node da lista encadeada.
  *
  * @param list Ponteiro do tipo linked_list que aponta para uma lista encadeada.
- * @return list_node*
+ * @return void.
  */
-list_node *remove_linked_node(linked_list *list)
+void remove_linked_node(linked_list *list)
 {
     list_node *removed_node = list->head;
     list->head = list->head->next;
+    list->size--;
     free(removed_node);
 }
 

@@ -4,3 +4,9 @@ Codificação de Huffman, Plotagem Lista vs Árvore de busca binária, Semiário
  Integrantes:
  - Gabriela Pontes
  - José Félix
+
+## Rodar testes
+```bash
+gcc testes.c -o testes -lcunit
+./testes
+```
