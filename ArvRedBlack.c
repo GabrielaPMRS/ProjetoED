@@ -16,7 +16,7 @@ void preOrder(ArvLLRB *root)
 {
   if (root != NULL)
   {
-     printf("%d %s\n", root->data, root->color == BLACK ? "preto" : "vermelho");
+    printf("%d %s\n", root->data, root->color == BLACK ? "preto" : "vermelho");
     preOrder(root->left);
     preOrder(root->right);
   }
@@ -95,7 +95,7 @@ ArvLLRB *insertNode(ArvLLRB *no, int value, int *check)
   {
     *check = 0; // O valor está duplicado na árvore
   }
-  
+
   else
   {
     if (value < no->data)
@@ -316,13 +316,12 @@ int remove_ArvLLRB(ArvLLRB *root, int value)
   }
 }
 
-
 int main()
 {
   ArvLLRB *root = NULL;
 
   int num, i;
-  for(i = 0; i < 4; i++)
+  for (i = 0; i < 4; i++)
   {
     scanf("%d", &num);
     insert_ArvLLRB(&root, num);
