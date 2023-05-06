@@ -1,31 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef struct binary_tree binary_tree;
-
-struct binary_tree
-{
-    void *item;
-    binary_tree *left;
-    binary_tree *right;
-};
-
-binary_tree *create_binary_tree(void *item, binary_tree *left, binary_tree *right)
-{
-    binary_tree *new_binary_tree = (binary_tree *)malloc(sizeof(binary_tree));
-    new_binary_tree->item = item;
-    new_binary_tree->left = left;
-    new_binary_tree->right = right;
-    return new_binary_tree;
-}
-
-int is_bit_i_set(unsigned char c, int i)
-{
-    unsigned char mask = 1 << i;
-    unsigned char res = mask & c;
-    return res != 0;
-}
+#include "bibliotecas/linked_list.c"
+#include "bibliotecas/auxiliares.c"
+#include "bibliotecas/binary_tree.c"
 
 int define_file_size(FILE *compressed_file)
 {
@@ -95,9 +73,10 @@ binary_tree *recreate_tree(unsigned char pre_order_tree[], int *i_tree, int tree
     return tree;
 }
 
-void unzip_to_file(FILE *compresses_file, binary_tree *tree, int file_size, int tree_size, int trash_size)
+void unzip_to_file(FILE *compresses_file, binary_tree *tree,
+                   int file_size, int tree_size, int trash_size)
 {
-    int j, i, k;
+    int j, k;
     int bits_to_read = 0;
     int compressed_size = file_size - 2 - tree_size;
 
@@ -118,9 +97,9 @@ void unzip_to_file(FILE *compresses_file, binary_tree *tree, int file_size, int 
         for (k = 7; k >= bits_to_read; k--)
         {
 
-            int res = is_bit_i_set(byte, k);
+            int bit = is_bit_i_set(byte, k);
 
-            if (res == 1)
+            if (bit == 1)
             {
                 aux = aux->right;
             }
