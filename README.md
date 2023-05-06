@@ -1,6 +1,6 @@
-# ProjetoED - Codificação Huffman
+# Projeto de Estrutura de Dados
+Codificação de Huffman, Plotagem Lista vs Árvore de busca binária, Semiário e implementação Árvore Red-Black.
 
  Integrantes:
- - Eugenio Corrêa 
  - Gabriela Pontes
  - José Félix
