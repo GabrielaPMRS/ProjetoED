@@ -1,17 +1,16 @@
 filename = 'saida.txt';
 m = csvread(filename);
 
-sorted = sortrows(m, 2);
-disp(sorted);
-disp(m);
-%plot(sorted(:,1), sorted(:, 2), 'mo', sorted(:,1), sorted(:,3), 'bo');
-%plot(m(:,1), m(:, 2), 'm', m(:,1), m(:, 3), 'b');
+figure;
+plot(m(:,1), m(:, 2), 'r', m(:,1), m(:, 3), 'b');
+title("Lista versus Árvore de busca binária");
 
-fig1 = figure();
-plot(m(:,1), m(:, 2), 'b.');
+figure;
+plot(m(:,1), m(:, 3), 'b');
+title("Árvore de busca binária");
 
-fig2 = figure();
-plot(sorted(:,1), sorted(:, 2), 'b.', 1:length(sorted(:,2)), sorted(:,2), 'r.');
-%fig3 = figure();
-plot(linspace(m(1:1), m(-1:-1), length(m(:,1)), sorted(:,2), 'r.');
-%plot(m(:, 1), m(:, 2), 'r');
+figure;
+plot(m(:, 1), m(:, 2), 'r');
+title("Lista");
+xlabel('Tamanho (n)')
+ylabel
