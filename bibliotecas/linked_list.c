@@ -17,6 +17,11 @@ struct linked_list
     int size;
 };
 
+/**
+ * @brief Cria uma lista encadeada.
+ *
+ * @return Retorna um ponteiro do tipo linked_list que aponta para a lista criada.
+ */
 linked_list *create_linked_list()
 {
     linked_list *list = (linked_list *)malloc(sizeof(linked_list));
@@ -25,6 +30,13 @@ linked_list *create_linked_list()
     return list;
 }
 
+/**
+ * @brief Adiciona um novo node no início da lista encadeada.
+ *
+ * @param list Ponteiro do tipo linked_list que aponta para a lista que está sendo incrementada.
+ * @param valor O ítem adicionado.
+ * @return void.
+ */
 void add_linked_list(linked_list *list, int valor)
 {
     list_node *new_node = (list_node *)malloc(sizeof(list_node));
@@ -34,6 +46,13 @@ void add_linked_list(linked_list *list, int valor)
     list->head = new_node;
 }
 
+/**
+ * @brief Adiciona em novo node no fim da lista encadeada.
+ *
+ * @param list Ponteiro do tipo linked_list que aponta para a lista que está sendo incrementada.
+ * @param valor O ítem adicionado.
+ * @return void.
+ */
 void add_linked_list_tail(linked_list *list, int valor)
 {
     list_node *new_node = (list_node *)malloc(sizeof(list_node));
@@ -56,13 +75,25 @@ void add_linked_list_tail(linked_list *list, int valor)
     }
 }
 
-list_node *remove_linked_node(linked_list *bits_list)
+/**
+ * @brief Remove sempre o primeiro node da lista encadeada.
+ *
+ * @param list Ponteiro do tipo linked_list que aponta para uma lista encadeada.
+ * @return list_node*
+ */
+list_node *remove_linked_node(linked_list *list)
 {
-    list_node *removed_node = bits_list->head;
-    bits_list->head = bits_list->head->next;
+    list_node *removed_node = list->head;
+    list->head = list->head->next;
     free(removed_node);
 }
 
+/**
+ * @brief Copia os ítens de uma lista encadeada para outra.
+ *
+ * @param aux_list Ponteiro do tipo linked_list que aponta para uma lista encadeada auxiliar.
+ * @param final_list Ponteiro do tipo linked_list que aponta para a lista encadeada final.
+ */
 void copy_list(linked_list *aux_list, linked_list *final_list)
 {
     list_node *aux = aux_list->head;
