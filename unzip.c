@@ -5,6 +5,12 @@
 #include "bibliotecas/auxiliares.c"
 #include "bibliotecas/binary_tree.c"
 
+/**
+ * @brief Define o tamanho do arquivo comprimido.
+ *
+ * @param compressed_file Ponteiro do tipo FILE que aponta para o arquivo comprimido.
+ * @return Retorna o tamanho do arquivo comprimido.
+ */
 int define_file_size(FILE *compressed_file)
 {
     int file_size = 0;
@@ -16,6 +22,14 @@ int define_file_size(FILE *compressed_file)
     return file_size;
 }
 
+/**
+ * @brief Define o tamanho da árvore e o tamnho do lixo.
+ *
+ * @param compressed_file Ponteiro do tipo FILE que aponta para o arquivo comprimido.
+ * @param tree_size Ponteiro do tipo inteiro para o tamanho da árvore.
+ * @param trash_size Ponteiro do tipo inteiro para o tamanho do lixo.
+ * @return void.
+ */
 void define_treesize_trashsize(FILE *compressed_file, int *tree_size, int *trash_size)
 {
     unsigned char first_byte;
@@ -40,6 +54,14 @@ void define_treesize_trashsize(FILE *compressed_file, int *tree_size, int *trash
     }
 }
 
+/**
+ * @brief Função recursiva que reconstroi a árvore a partir da árvore em pré ordem.
+ *
+ * @param pre_order_tree Array contendo a árvore em pré ordem.
+ * @param i_tree Ponteiro do tipo inteiro que aponta para o índice que percorre o array.
+ * @param tree_size Tamanho da árvore.
+ * @return Retorna um ponteiro do tipo binary_tree que aponta para a árvore reconstruida.
+ */
 binary_tree *recreate_tree(unsigned char pre_order_tree[], int *i_tree, int tree_size)
 {
     binary_tree *tree;
@@ -73,6 +95,16 @@ binary_tree *recreate_tree(unsigned char pre_order_tree[], int *i_tree, int tree
     return tree;
 }
 
+/**
+ * @brief Gera o arquivo descomprimido.
+ *
+ * @param compresses_file Ponteiro do tipo FILE que aponta para o arquivo comprimido.
+ * @param tree Ponteiro do tipo binary_tree que aponta para a árvore reconstruida.
+ * @param file_size Tamanho do arquivo comprimido.
+ * @param tree_size Tamanho da árvore.
+ * @param trash_size Tamanho do lixo.
+ * @return void.
+ */
 void unzip_to_file(FILE *compresses_file, binary_tree *tree,
                    int file_size, int tree_size, int trash_size)
 {

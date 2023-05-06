@@ -70,17 +70,6 @@ Huff_node *dequeue(Huff *huff)
     }
 }
 
-void print_queue(Huff *huff)
-{
-    Huff_node *current = huff->head;
-    while (current != NULL)
-    {
-        printf("byte: %c | freq: %d \n", *((unsigned char *)current->byte), current->frequencia);
-        current = current->next;
-    }
-    printf("\n");
-}
-
 Huff_node *create_huff_tree(Huff *huff)
 {
     while (huff->head->next != NULL)
@@ -94,29 +83,4 @@ Huff_node *create_huff_tree(Huff *huff)
         enqueue(huff, NULL, soma_freq, left, right);
     }
     return huff->head;
-}
-
-void print_pre_order(Huff_node *tree)
-{
-    if (tree != NULL)
-    {
-        if (tree->byte == NULL)
-        {
-            printf("%c ", '*');
-        }
-        else if (*((unsigned char *)tree->byte) == '*')
-        {
-            printf("\\*");
-        }
-        else if (*((unsigned char *)tree->byte) == '\\')
-        {
-            printf("\\\\");
-        }
-        else
-        {
-            printf("%c ", *((unsigned char *)tree->byte));
-        }
-        print_pre_order(tree->left);
-        print_pre_order(tree->right);
-    }
 }

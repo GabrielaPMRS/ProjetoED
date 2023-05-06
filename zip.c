@@ -13,6 +13,13 @@ struct byte_info
     linked_list *bits;
 };
 
+/**
+ * @brief Inicializa o array de bytes, definindo o indice como byte, a frequencia inicial 0, e a lista
+ * encadeada de cada byte nula.
+ *
+ * @param sequencia_bytes Array que armazena as informações referentes a cada byte.
+ * @return void
+ */
 void inicializar(byte_info sequencia_bytes[])
 {
     int i;
@@ -24,6 +31,13 @@ void inicializar(byte_info sequencia_bytes[])
     }
 }
 
+/**
+ * @brief Lê byte a byte do arquivo original, e aumenta sua respectiva frequência no array de bytes.
+ *
+ * @param sequencia_bytes Array que armazena as informações referentes a cada byte.
+ * @param filename Nome do arquivo original a ser lido.
+ * @return void.
+ */
 void analizar_frequencias(byte_info sequencia_bytes[], char filename[])
 {
     unsigned char x;
@@ -36,6 +50,13 @@ void analizar_frequencias(byte_info sequencia_bytes[], char filename[])
     fclose(arquivo_origem);
 }
 
+/**
+ * @brief Adiciona na fila de prioridade todos os bytes de frequência não nula.
+ *
+ * @param huff Ponteiro do tipo Huff que aponta para a fila de prioridade.
+ * @param sequencia_bytes Array que armazena as informações referentes a cada byte.
+ * @return void.
+ */
 void populate_huff_queue(Huff *huff, byte_info sequencia_bytes[])
 {
     int i;
@@ -48,7 +69,15 @@ void populate_huff_queue(Huff *huff, byte_info sequencia_bytes[])
     }
 }
 
-list_node *saveTreeInList(Huff_node *tree, linked_list *PreOrderTree)
+/**
+ * @brief Salva a árvore de Huffman em pré ordem numa lista encadeada.
+ *
+ * @param tree Ponteiro do tipo Huff_node que aponta para a árvore de Huffman.
+ * @param PreOrderTree Ponteiro do tipo linked_list que aponta para uma lista
+ * encadeada que irá guardar a árvore em pré ordem.
+ * @return void.
+ */
+void saveTreeInList(Huff_node *tree, linked_list *PreOrderTree)
 {
     if (tree != NULL)
     {
@@ -74,9 +103,17 @@ list_node *saveTreeInList(Huff_node *tree, linked_list *PreOrderTree)
         saveTreeInList(tree->left, PreOrderTree);
         saveTreeInList(tree->right, PreOrderTree);
     }
-    return PreOrderTree->head;
 }
 
+/**
+ * @brief Função recursiva que percorre toda a árvore e salva numa lista encadeada a versão
+ * comprimida de cada byte.
+ *
+ * @param tree Ponteiro do tipo Huff_node que aponta para a árvore de Huffman.
+ * @param aux_bits_list Ponteiro do tipo linked_list que aponta para uma lista encadeada auxiliar.
+ * @param sequencia_bytes Array que armazena as informações referentes a cada byte.
+ * @return void.
+ */
 void get_bytes_bits_list(Huff_node *tree, linked_list *aux_bits_list, byte_info sequencia_bytes[])
 {
     if (tree->left == NULL && tree->right == NULL)
@@ -97,6 +134,13 @@ void get_bytes_bits_list(Huff_node *tree, linked_list *aux_bits_list, byte_info 
     }
 }
 
+/**
+ * @brief Comprimir cada byte do arquivo original para um temporário.
+ *
+ * @param filename Nome do arquivo original.
+ * @param sequencia_bytes Array que armazena as informações referentes a cada byte.
+ * @return Retorna o tamanho do lixo.
+ */
 int zip_tmp_file(char filename[], byte_info sequencia_bytes[])
 {
     FILE *original = fopen(filename, "rb");
@@ -138,7 +182,15 @@ int zip_tmp_file(char filename[], byte_info sequencia_bytes[])
     return trash_size;
 }
 
-void header(char filename[], byte_info sequencia_bytes[], linked_list *PreOrderTree)
+/**
+ * @brief Gera o arquivo a ser descomprimido.
+ *
+ * @param filename Nome do arquivo original.
+ * @param sequencia_bytes Array que armazena as informações referentes a cada byte.
+ * @param PreOrderTree Ponteiro do tipo linked_list que aponta para a árvore em pré ordem.
+ * @return void.
+ */
+void zip_file(char filename[], byte_info sequencia_bytes[], linked_list *PreOrderTree)
 {
     int trash_size = zip_tmp_file(filename, sequencia_bytes);
     int tree_size = PreOrderTree->size;
@@ -236,7 +288,7 @@ int main()
     linked_list *PreOrderTree = create_linked_list();
     saveTreeInList(huff_tree, PreOrderTree);
 
-    header(file_name, sequencia_bytes, PreOrderTree);
+    zip_file(file_name, sequencia_bytes, PreOrderTree);
 
     printf("arquivo comprimido em 'output.huff'\n");
 }
