@@ -283,8 +283,6 @@ int main()
     linked_list *aux_bit_list = create_linked_list();
     get_bytes_bits_list(huff_tree, aux_bit_list, sequencia_bytes);
 
-    int trash_size = zip_tmp_file(file_name, sequencia_bytes);
-
     linked_list *PreOrderTree = create_linked_list();
     saveTreeInList(huff_tree, PreOrderTree);
 
